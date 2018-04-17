@@ -9,33 +9,21 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
-//    @Override
-//    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
-//            throws IOException, ServletException {
-//        final Authentication authentication = TokenAuthenticationService.getAuthentication((HttpServletRequest) request);
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-//        if (authentication == null) {
-//            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
-//        } else {
-//            filterChain.doFilter(request, response);
-//        }
-//    }
-
     @Override
-    public void doFilter(ServletRequest request,
-                         ServletResponse response,
-                         FilterChain filterChain)
+    public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain filterChain)
             throws IOException, ServletException {
-        Authentication authentication = TokenAuthenticationService
-                .getAuthentication((HttpServletRequest)request);
-
-        SecurityContextHolder.getContext()
-                .setAuthentication(authentication);
-        filterChain.doFilter(request,response);
+        final Authentication authentication = TokenAuthenticationService.getAuthentication((HttpServletRequest) request);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        if (authentication == null) {
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        } else {
+            filterChain.doFilter(request, response);
+        }
     }
 }
 

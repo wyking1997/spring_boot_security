@@ -19,54 +19,25 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JwtLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-//    public JwtLoginFilter(final String url, final AuthenticationManager authManager) {
-//        super(new AntPathRequestMatcher(url));
-//        setAuthenticationManager(authManager);
-//    }
-//
-//    @Override
-//    public Authentication attemptAuthentication(final HttpServletRequest req, final HttpServletResponse res)
-//            throws AuthenticationException, IOException, ServletException {
-//        final Credentials creds = new ObjectMapper().readValue(req.getInputStream(), Credentials.class);
-//        return getAuthenticationManager()//
-//                .authenticate(new UsernamePasswordAuthenticationToken( //
-//                        creds.getUsername(), //
-//                        creds.getPassword(), //
-//                        Collections.emptyList()));
-//    }
-//
-//    @Override
-//    protected void successfulAuthentication(final HttpServletRequest req, final HttpServletResponse res,
-//                                            final FilterChain chain, final Authentication auth) throws IOException, ServletException {
-//        TokenAuthenticationService.addAuthentication(res, auth.getName(), auth.getAuthorities());
-//    }
-public JwtLoginFilter(String url, AuthenticationManager authManager) {
-    super(new AntPathRequestMatcher(url));
-    setAuthenticationManager(authManager);
-}
+    public JwtLoginFilter(final String url, final AuthenticationManager authManager) {
+        super(new AntPathRequestMatcher(url));
+        setAuthenticationManager(authManager);
+    }
 
     @Override
-    public Authentication attemptAuthentication(
-            HttpServletRequest req, HttpServletResponse res)
+    public Authentication attemptAuthentication(final HttpServletRequest req, final HttpServletResponse res)
             throws AuthenticationException, IOException, ServletException {
-        Credentials creds = new ObjectMapper()
-                .readValue(req.getInputStream(), Credentials.class);
-        return getAuthenticationManager().authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        creds.getUsername(),
-                        creds.getPassword(),
-                        Collections.emptyList()
-                )
-        );
+        final Credentials creds = new ObjectMapper().readValue(req.getInputStream(), Credentials.class);
+        return getAuthenticationManager()//
+                .authenticate(new UsernamePasswordAuthenticationToken( //
+                        creds.getUsername(), //
+                        creds.getPassword(), //
+                        Collections.emptyList()));
     }
 
     @Override
-    protected void successfulAuthentication(
-            HttpServletRequest req,
-            HttpServletResponse res, FilterChain chain,
-            Authentication auth) throws IOException, ServletException {
-        TokenAuthenticationService
-                .addAuthentication(res, auth.getName());
+    protected void successfulAuthentication(final HttpServletRequest req, final HttpServletResponse res,
+                                            final FilterChain chain, final Authentication auth) throws IOException, ServletException {
+        TokenAuthenticationService.addAuthentication(res, auth.getName(), auth.getAuthorities());
     }
 }
-
